@@ -26,8 +26,14 @@ Astro 5 with TypeScript and Tailwind, compiled to static HTML and deployed to
 Cloudflare Pages.
 
 There is no backend. The deployed artifact is HTML, CSS, images, and a small
-amount of client JavaScript. There are no serverless functions, no database, no
-runtime secrets, and no third-party request-time dependencies.
+amount of client JavaScript. Nothing executes on a server in response to a
+visitor's request: no serverless functions in the request path, no database, no
+runtime secrets, no third-party request-time dependencies.
+
+The one piece of scheduled infrastructure — the rebuild cron described under
+GitHub Statistics — sits entirely outside the request path. It handles no visitor
+traffic, holds no user data, and its failure would leave the site serving
+slightly stale numbers rather than erroring.
 
 ### Why no backend
 
@@ -127,7 +133,13 @@ a Cloudflare Pages deploy hook daily. GitHub Actions' scheduled workflows are
 deliberately not used for this, because GitHub disables them silently after 60
 days without repository activity — a failure mode that would go unnoticed.
 
-This step is isolated. Removing it changes nothing else in the site.
+The cron Worker is the only scheduled component in the system. It serves no
+visitor requests; it exists solely to trigger a build.
+
+Both this step and the cron are optional for the first release. Without them the
+statistics simply refresh whenever the site is deployed, which during active
+development is often enough. They should be added only once deploy frequency
+drops below the desired refresh rate.
 
 ## Contact
 
@@ -167,7 +179,8 @@ without corresponding risk.
 ## Cost
 
 Zero, ongoing. Cloudflare Pages' free tier provides unlimited bandwidth and 500
-builds per month; the site will use roughly 30. There is no request cap,
+builds per month; the site will use roughly 30 to 60 once the daily rebuild is
+enabled. There is no request cap,
 submission quota, or expiring trial anywhere in the stack. A custom domain, if
 later desired, costs approximately $10 per year and is the only possible expense.
 
