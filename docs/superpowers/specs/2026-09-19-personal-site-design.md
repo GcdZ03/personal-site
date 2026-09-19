@@ -176,6 +176,27 @@ later is a DNS change and requires no rebuild or migration.
 No component test suite. For a site with no runtime logic, it would be ceremony
 without corresponding risk.
 
+## Accounts and cost
+
+The host decision is settled: Cloudflare Pages, chosen over Vercel primarily
+because Vercel's free Hobby tier prohibits commercial use, which would become a
+problem if CreativeNotch is ever monetised and this site becomes its landing
+page. Cloudflare's free analytics, which require no cookie consent banner, were
+a secondary factor.
+
+The project requires two accounts in total:
+
+- GitHub (`GcdZ03`) — already held.
+- Cloudflare — free, no payment method required.
+
+No other account exists anywhere in the system. The absence of a backend
+eliminates the email provider, spam-prevention service, form service, CMS, and
+database that a conventional build of this site would accumulate.
+
+Neither account holds a payment method, so no usage spike can produce a bill.
+Cloudflare's static asset serving has no bandwidth limit to exceed, so a traffic
+spike degrades nothing.
+
 ## Cost
 
 Zero, ongoing. Cloudflare Pages' free tier provides unlimited bandwidth and 500
