@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectRow from '@/components/ProjectRow.astro';
+import { sortProjects, hasDetailPage } from '@/lib/projects';
+
+const entries = await getCollection('projects');
+const projects = sortProjects(
+  entries.map((entry) => ({
+    id: entry.id,
+    title: entry.data.title,
+    tier: entry.data.tier,
+    order: entry.data.order,
+    data: entry.data,
+  })),
+);
+
+const listed = projects.filter((project) => project.tier !== 'archive');
+const archived = projects.filter((project) => project.tier === 'archive');
+---
+<BaseLayout title="Projects — Gerald Chang" description="Side projects and things built.">
+  <h1 class="text-2xl font-semibold">Projects</h1>
+
+  <div class="mt-8">
+    {listed.map((project) => (
+      <ProjectRow
+        href={hasDetailPage(project.tier) ? `/projects/${project.id}` : project.data.links.repo}
+        title={project.data.title}
+        tagline={project.data.tagline}
+        stack={project.data.stack}
+        period={project.data.period}
+      />
+    ))}
+  </div>
+
+  {archived.length > 0 && (
+    <section class="mt-12">
+      <h2 class="text-sm font-medium text-neutral-500">Also built</h2>
+      <ul class="mt-3 space-y-1 text-sm text-neutral-600">
+        {archived.map((project) => (
+          <li>
+            {project.data.links.repo
+              ? <a class="hover:underline" href={project.data.links.repo}>{project.data.title}</a>
+              : project.data.title}
+            <span class="text-neutral-400"> — {project.data.tagline}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>
