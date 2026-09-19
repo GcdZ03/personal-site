@@ -42,8 +42,9 @@ fresher than the rebuild cadence, reading it requires a secret at request time,
 or something must be written. This site meets none of them.
 
 - Content is authored by hand in the repository and is static by nature.
-- GitHub statistics are fetched during CI, where the token is a build secret that
-  never reaches the browser. Day-old figures are indistinguishable from live ones.
+- GitHub statistics are fetched by a script that is run by hand, and its output
+  is committed, so no token is needed at build or request time. Day-old figures
+  are indistinguishable from live ones.
 - Contact is by link, so nothing is written.
 
 The consequence is that the site has no component that can fail independently of
@@ -86,10 +87,12 @@ section.
 Tier controls how much of the site a project occupies, and therefore how much
 work adding one costs.
 
-- `flagship` — gets a full case-study page and appears on the homepage.
-- `standard` — a row in the project index, linking out to its repository. No
-  detail page.
-- `archive` — a single line under "Also built". No page.
+- `flagship` — gets a full case-study page and is first in line for the
+  homepage.
+- `standard` — a row in the project index, linking out to its repository,
+  download, or demo. No detail page.
+- `archive` — a single line under "Also built". No page, and never on the
+  homepage.
 
 `standard` is the expected default. Adding a project at that tier means writing
 six lines of frontmatter and pushing; it requires no layout or design decisions.
@@ -104,12 +107,14 @@ This is the property that keeps the site maintainable as the project count grows
     /projects/[slug]  case study; generated only for tier: flagship
     /blog          post index
     /blog/[slug]   post
-    /resume        experience timeline, print-friendly
 
-The homepage's "All projects" link renders only when more than three projects
-exist. The site's shape is derived from the content collection rather than
-hardcoded, so it presents as a focused single-project site today and as an index
-later, with no code change.
+The homepage shows up to three projects: flagship first, then standard to fill
+whatever slots remain; archive projects never appear. Reserving the homepage for
+flagships alone would leave it showing a single item beside empty space until a
+second case study exists. Its "All projects" link renders only when more than
+three projects exist. The site's shape is derived from the content collection
+rather than hardcoded, so it presents as a focused single-project site today and
+as an index later, with no code change.
 
 ### Layout primitive
 
@@ -123,8 +128,10 @@ correct at every count and scans faster.
 
 ## GitHub statistics
 
-A build step fetches public repository data from the GitHub API using a token
-held in CI secrets, and writes the results into the generated HTML. Scope is
+A script, `npm run stats`, fetches public repository data from the GitHub API
+and writes it to `src/data/github-stats.json`, which is committed and read at
+build time. The GitHub token is optional and only raises the rate limit, so the
+script runs locally as well as anywhere a secret is available. Scope is
 deliberately narrow: recent commit activity and CreativeNotch's stars and latest
 release. A full contribution graph is excluded — a sparse one reads as a
 liability and a dense one is a signal readers discount.
@@ -138,9 +145,12 @@ The cron Worker is the only scheduled component in the system. It serves no
 visitor requests; it exists solely to trigger a build.
 
 Both this step and the cron are optional for the first release. Without them the
-statistics simply refresh whenever the site is deployed, which during active
-development is often enough. They should be added only once deploy frequency
-drops below the desired refresh rate.
+figures refresh only when someone runs `npm run stats` and commits the result:
+`npm run build` — the command Cloudflare runs — reads the committed JSON and
+never calls the API, and CI does not run the script either, since it holds no
+token and could not commit the output back. Automating the refresh is exactly
+what the cron above would buy. Until then, refreshing by hand before a release
+is enough at this update rate.
 
 ## Resume
 

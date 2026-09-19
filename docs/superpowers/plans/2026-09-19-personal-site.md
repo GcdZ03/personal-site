@@ -1400,3 +1400,7 @@ Run before declaring the project complete:
       the placeholder.
 - [ ] The LinkedIn placeholder in `src/pages/index.astro` has been replaced with a
       real URL or the anchor has been deleted.
+- [ ] `site` in `astro.config.mjs` is the real deployed URL, not the
+      `https://personal-site.pages.dev` placeholder. It is the base of every
+      `rel="canonical"`, so shipping the placeholder points all six pages at a
+      domain the site does not own.
