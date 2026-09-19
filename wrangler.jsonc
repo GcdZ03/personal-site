@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "personal-site",
+  "compatibility_date": "2026-09-19",
+
+  // Assets-only Worker: there is no `main` entry point, so nothing runs per
+  // request. Cloudflare serves the built files directly from its edge, which
+  // keeps the site's no-backend constraint intact and the asset requests free.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

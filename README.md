@@ -8,7 +8,7 @@ Static personal site built with Astro 7 and Tailwind 4. No backend.
 - `npm run build` — static build into `dist/`
 - `npm run stats` — refresh committed GitHub statistics
 
-Not deployed yet. The intended setup is Cloudflare Pages building from
+Not deployed yet. The intended setup is Cloudflare Workers (static assets) building from
 `main`; nothing is connected until that project exists.
 
 Design: `docs/superpowers/specs/2026-09-19-personal-site-design.md`

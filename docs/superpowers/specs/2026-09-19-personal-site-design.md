@@ -23,7 +23,7 @@ page should come away understanding how he makes engineering decisions.
 ## Architecture
 
 Astro 7 with TypeScript and Tailwind 4, compiled to static HTML and deployed to
-Cloudflare Pages. Astro 7 requires Node 22.12 or later.
+Cloudflare Workers as static assets. Astro 7 requires Node 22.12 or later.
 
 There is no backend. The deployed artifact is HTML, CSS, images, and a small
 amount of client JavaScript. Nothing executes on a server in response to a
@@ -137,7 +137,7 @@ release. A full contribution graph is excluded — a sparse one reads as a
 liability and a dense one is a signal readers discount.
 
 Freshness comes from a scheduled rebuild: a Cloudflare Worker cron trigger calls
-a Cloudflare Pages deploy hook daily. GitHub Actions' scheduled workflows are
+a Cloudflare deploy hook daily. GitHub Actions' scheduled workflows are
 deliberately not used for this, because GitHub disables them silently after 60
 days without repository activity — a failure mode that would go unnoticed.
 
@@ -187,10 +187,18 @@ structure is standing, not decided upfront.
 
 ## Deployment
 
-Commits to `main` on GitHub trigger a Cloudflare Pages build. Pull requests get
-preview deployments. The site is served from a `*.pages.dev` subdomain.
+Commits to `main` on GitHub trigger a Cloudflare build via Workers Builds, which
+runs `npm run build` and then `npx wrangler deploy`. Pull requests get preview
+versions. The site is served from a `*.workers.dev` subdomain.
 
-Cloudflare Pages is chosen over Vercel for its unlimited free bandwidth; Vercel's
+Deployment targets Cloudflare Workers with static assets rather than Cloudflare
+Pages. Pages was the original choice, but Cloudflare now directs new projects to
+Workers and Pages is no longer where the product is developed. The distinction
+does not affect this site's architecture: `wrangler.jsonc` declares an
+assets-only Worker with no `main` entry point, so no code runs per request and
+static asset requests are served free and unmetered, exactly as under Pages.
+
+Cloudflare is chosen over Vercel for its unlimited free bandwidth; Vercel's
 hobby tier caps bandwidth and restricts commercial use. Attaching a custom domain
 later is a DNS change and requires no rebuild or migration.
 
@@ -204,7 +212,7 @@ without corresponding risk.
 
 ## Accounts and cost
 
-The host decision is settled: Cloudflare Pages, chosen over Vercel primarily
+The host decision is settled: Cloudflare, chosen over Vercel primarily
 because Vercel's free Hobby tier prohibits commercial use, which would become a
 problem if CreativeNotch is ever monetised and this site becomes its landing
 page. Cloudflare's free analytics, which require no cookie consent banner, were
@@ -225,7 +233,7 @@ spike degrades nothing.
 
 ## Cost
 
-Zero, ongoing. Cloudflare Pages' free tier provides unlimited bandwidth and 500
+Zero, ongoing. Cloudflare's free tier serves static assets unmetered and allows 500
 builds per month; the site will use roughly 30 to 60 once the daily rebuild is
 enabled. There is no request cap,
 submission quota, or expiring trial anywhere in the stack. A custom domain, if
