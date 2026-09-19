@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ProjectRow from '@/components/ProjectRow.astro';
 import { featuredProjects, shouldShowAllProjectsLink, hasDetailPage } from '@/lib/projects';
+import stats from '@/data/github-stats.json';
 
 const entries = await getCollection('projects');
 const all = entries.map((entry) => ({
@@ -54,5 +55,18 @@ const showLinkedIn = !LINKEDIN_URL.includes('REPLACE-ME');
       {showLinkedIn && <a class="underline" href={LINKEDIN_URL}>LinkedIn</a>}
       <a class="underline" href="mailto:dezhengchang@gmail.com">Email</a>
     </p>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-sm font-medium text-neutral-500">On GitHub</h2>
+    <ul class="mt-3 space-y-1 text-sm text-neutral-600">
+      {stats.repos.map((repo) => (
+        <li>
+          <a class="hover:underline" href={repo.url}>{repo.name}</a>
+          {repo.latestRelease && <span class="text-neutral-400"> — {repo.latestRelease}</span>}
+          {repo.stars > 0 && <span class="text-neutral-400"> · {repo.stars} stars</span>}
+        </li>
+      ))}
+    </ul>
   </section>
 </BaseLayout>
