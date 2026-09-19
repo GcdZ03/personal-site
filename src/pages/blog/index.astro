@@ -8,21 +8,25 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 const formatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 ---
 <BaseLayout title="Writing — Gerald Chang" description="Notes on building things.">
-  <h1 class="text-2xl font-semibold">Writing</h1>
-  {posts.length === 0 && <p class="mt-6 text-neutral-600">Nothing published yet.</p>}
-  <div class="mt-8">
-    {posts.map((post) => (
-      <article class="border-t border-neutral-200 py-6">
-        <div class="flex items-baseline justify-between gap-4">
-          <h2 class="font-medium">
-            <a class="hover:underline" href={`/blog/${post.id}`}>{post.data.title}</a>
-          </h2>
-          <time class="shrink-0 text-sm text-neutral-500" datetime={post.data.date.toISOString()}>
-            {formatter.format(post.data.date)}
-          </time>
-        </div>
-        <p class="mt-1 text-neutral-600">{post.data.description}</p>
-      </article>
-    ))}
-  </div>
+  <h1 class="text-h1">Writing</h1>
+  {posts.length === 0 && (
+    <p class="mt-6 text-body text-muted">Nothing published yet.</p>
+  )}
+  {posts.length > 0 && (
+    <div class="mt-section rows">
+      {posts.map((post) => (
+        <article class="row">
+          <div class="row-head">
+            <h2 class="row-title">
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
+            <time class="row-meta" datetime={post.data.date.toISOString()}>
+              {formatter.format(post.data.date)}
+            </time>
+          </div>
+          <p class="row-tagline">{post.data.description}</p>
+        </article>
+      ))}
+    </div>
+  )}
 </BaseLayout>

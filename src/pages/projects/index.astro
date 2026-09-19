@@ -19,30 +19,33 @@ const listed = projects.filter((project) => project.tier !== 'archive');
 const archived = projects.filter((project) => project.tier === 'archive');
 ---
 <BaseLayout title="Projects — Gerald Chang" description="Side projects and things built.">
-  <h1 class="text-2xl font-semibold">Projects</h1>
+  <h1 class="text-h1">Projects</h1>
 
-  <div class="mt-8">
-    {listed.map((project) => (
-      <ProjectRow
-        href={hasDetailPage(project.tier) ? `/projects/${project.id}` : project.data.links.repo}
-        title={project.data.title}
-        tagline={project.data.tagline}
-        stack={project.data.stack}
-        period={project.data.period}
-      />
-    ))}
-  </div>
+  <section class="mt-section">
+    <h2 class="eyebrow">Selected work</h2>
+    <div class="rows">
+      {listed.map((project) => (
+        <ProjectRow
+          href={hasDetailPage(project.tier) ? `/projects/${project.id}` : project.data.links.repo}
+          title={project.data.title}
+          tagline={project.data.tagline}
+          stack={project.data.stack}
+          period={project.data.period}
+        />
+      ))}
+    </div>
+  </section>
 
   {archived.length > 0 && (
-    <section class="mt-12">
-      <h2 class="text-sm font-medium text-neutral-500">Also built</h2>
-      <ul class="mt-3 space-y-1 text-sm text-neutral-600">
+    <section class="mt-section">
+      <h2 class="eyebrow">Also built</h2>
+      <ul class="mt-6 space-y-2 text-ui">
         {archived.map((project) => (
           <li>
             {project.data.links.repo
-              ? <a class="hover:underline" href={project.data.links.repo}>{project.data.title}</a>
-              : project.data.title}
-            <span class="text-neutral-400"> — {project.data.tagline}</span>
+              ? <a class="link-quiet" href={project.data.links.repo}>{project.data.title}</a>
+              : <span class="text-muted">{project.data.title}</span>}
+            <span class="text-faint"> — {project.data.tagline}</span>
           </li>
         ))}
       </ul>

@@ -13,6 +13,11 @@ const nav = [
   { href: '/blog', label: 'Writing' },
   { href: '/about', label: 'About' },
 ];
+
+// The notch marks the section you are in, so a case study keeps /projects lit.
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
 ---
 <html lang="en">
   <head>
@@ -20,16 +25,35 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
   </head>
-  <body class="bg-white text-neutral-900 antialiased">
-    <div class="mx-auto flex min-h-screen max-w-2xl flex-col px-6">
-      <header class="flex gap-6 py-8 text-sm">
-        {nav.map((item) => <a class="hover:underline" href={item.href}>{item.label}</a>)}
+  <body class="bg-canvas text-ink antialiased">
+    <div class="flex min-h-screen flex-col">
+      <header class="bar">
+        <div class="mx-auto w-full max-w-page px-gutter sm:px-8">
+          <nav class="bar-nav" aria-label="Primary">
+            {nav.map((item) => (
+              <a
+                class="bar-link"
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
       </header>
-      <main class="flex-1"><slot /></main>
-      <footer class="py-12 text-sm text-neutral-500">
-        <a class="hover:underline" href="https://github.com/GcdZ03">GitHub</a>
+
+      <main class="mx-auto w-full max-w-page flex-1 px-gutter pt-section pb-block sm:px-8">
+        <slot />
+      </main>
+
+      <footer class="mt-auto border-t border-rule">
+        <div class="mx-auto w-full max-w-page px-gutter py-8 font-mono text-meta sm:px-8">
+          <a class="link-quiet" href="https://github.com/GcdZ03">GitHub</a>
+        </div>
       </footer>
     </div>
   </body>

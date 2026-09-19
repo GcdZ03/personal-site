@@ -14,10 +14,13 @@ const formatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 ---
 <BaseLayout title={`${post.data.title} — Gerald Chang`} description={post.data.description}>
   <article>
-    <h1 class="text-2xl font-semibold">{post.data.title}</h1>
-    <time class="mt-2 block text-sm text-neutral-500" datetime={post.data.date.toISOString()}>
+    <h1 class="text-h1">{post.data.title}</h1>
+    <time
+      class="mt-5 block font-mono text-meta text-faint"
+      datetime={post.data.date.toISOString()}
+    >
       {formatter.format(post.data.date)}
     </time>
-    <div class="prose mt-10 max-w-none"><Content /></div>
+    <div class="prose mt-section max-w-none"><Content /></div>
   </article>
 </BaseLayout>

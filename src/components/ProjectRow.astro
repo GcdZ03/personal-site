@@ -9,15 +9,15 @@ interface Props {
 
 const { href, title, tagline, stack, period } = Astro.props;
 ---
-<article class="border-t border-neutral-200 py-6">
-  <div class="flex items-baseline justify-between gap-4">
-    <h3 class="font-medium">
-      {href ? <a class="hover:underline" href={href}>{title}</a> : title}
+<article class="row">
+  <div class="row-head">
+    <h3 class="row-title">
+      {href ? <a href={href}>{title}</a> : title}
     </h3>
-    <span class="shrink-0 text-sm text-neutral-500">{period}</span>
+    <span class="row-meta">{period}</span>
   </div>
-  <p class="mt-1 text-neutral-600">{tagline}</p>
-  <ul class="mt-2 flex flex-wrap gap-2 text-xs text-neutral-500">
-    {stack.map((item) => <li class="rounded bg-neutral-100 px-2 py-1">{item}</li>)}
+  <p class="row-tagline">{tagline}</p>
+  <ul class="stack">
+    {stack.map((item) => <li>{item}</li>)}
   </ul>
 </article>
