@@ -1,6 +1,58 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectRow from '@/components/ProjectRow.astro';
+import { featuredProjects, shouldShowAllProjectsLink, hasDetailPage } from '@/lib/projects';
+
+const entries = await getCollection('projects');
+const all = entries.map((entry) => ({
+  id: entry.id,
+  title: entry.data.title,
+  tier: entry.data.tier,
+  order: entry.data.order,
+  data: entry.data,
+}));
+
+const featured = featuredProjects(all);
+const showAllLink = shouldShowAllProjectsLink(all.length, featured.length);
+
+// TASK BLOCKER: ask the author for their LinkedIn URL before this page ships.
+// The spec names email, GitHub and LinkedIn as the full contact surface. Do not
+// guess the handle — a wrong profile link is worse than no link. If the author
+// does not want a LinkedIn presence, delete the anchor below instead.
+const LINKEDIN_URL = 'https://www.linkedin.com/in/REPLACE-ME';
+const showLinkedIn = !LINKEDIN_URL.includes('REPLACE-ME');
 ---
 <BaseLayout title="Gerald Chang" description="Developer. Builds macOS tools.">
-  <h1 class="text-2xl font-semibold">Gerald Chang</h1>
+  <section class="py-8">
+    <h1 class="text-2xl font-semibold">Gerald Chang</h1>
+    <p class="mt-3 max-w-prose text-neutral-600">
+      Developer. I build macOS tools that respect the machine they run on.
+    </p>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-sm font-medium text-neutral-500">Selected work</h2>
+    <div class="mt-3">
+      {featured.map((project) => (
+        <ProjectRow
+          href={hasDetailPage(project.tier) ? `/projects/${project.id}` : project.data.links.repo}
+          title={project.data.title}
+          tagline={project.data.tagline}
+          stack={project.data.stack}
+          period={project.data.period}
+        />
+      ))}
+    </div>
+    {showAllLink && <p class="mt-6 text-sm"><a class="underline" href="/projects">All projects →</a></p>}
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-sm font-medium text-neutral-500">Elsewhere</h2>
+    <p class="mt-3 flex gap-4 text-sm">
+      <a class="underline" href="https://github.com/GcdZ03">GitHub</a>
+      {showLinkedIn && <a class="underline" href={LINKEDIN_URL}>LinkedIn</a>}
+      <a class="underline" href="mailto:dezhengchang@gmail.com">Email</a>
+    </p>
+  </section>
 </BaseLayout>
