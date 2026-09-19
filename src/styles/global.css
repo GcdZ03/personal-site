@@ -25,6 +25,10 @@
   --ui-faint:       #6c6c78;
   --ui-accent:      #4b37c8;
   --ui-accent-soft: #edeafb;
+
+  /* The bar is chrome, not a separator: it is the one line the notch motif
+     depends on, so it is held a step darker than the generic hairline. */
+  --ui-bar: #9494a4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +43,7 @@
     --ui-faint:       #9494a0;
     --ui-accent:      #a79bff;
     --ui-accent-soft: #1b1930;
+    --ui-bar:         #4f4f5c;
   }
 }
 
@@ -53,6 +58,7 @@
   --color-faint:       var(--ui-faint);
   --color-accent:      var(--ui-accent);
   --color-accent-soft: var(--ui-accent-soft);
+  --color-bar:         var(--ui-bar);
 }
 
 /* ===========================================================================
@@ -166,7 +172,7 @@
      it is the one bold move on the site.
      ---------------------------------------------------------------------- */
   .bar {
-    border-bottom: 1px solid var(--ui-rule-strong);
+    border-bottom: 1px solid var(--ui-bar);
   }
 
   .bar-nav {
@@ -204,7 +210,7 @@
     top: 100%;
     height: 0.5rem;
     background-color: var(--ui-canvas);
-    border: 1px solid var(--ui-rule-strong);
+    border: 1px solid var(--ui-bar);
     border-top: 0;
     border-bottom: 2px solid var(--ui-accent);
     border-end-start-radius: var(--radius-notch);
@@ -387,6 +393,12 @@
   --tw-prose-quote-borders: var(--ui-accent);
   --tw-prose-captions: var(--ui-faint);
   --tw-prose-code: var(--ui-ink);
+  --tw-prose-kbd: var(--ui-ink);
+  /* The plugin uses this as a whole colour (`0 0 0 1px var(…)`), not as rgb
+     channels, so it takes a colour: a hairline ring, which is what a keycap
+     wants anyway. Left at the plugin default it stays near-black and vanishes
+     on the dark canvas. */
+  --tw-prose-kbd-shadows: var(--ui-rule-strong);
   --tw-prose-pre-code: var(--ui-read);
   --tw-prose-pre-bg: var(--ui-surface);
   --tw-prose-th-borders: var(--ui-rule-strong);
@@ -395,6 +407,10 @@
   font-family: var(--font-display);
   font-size: var(--text-body);
   line-height: 1.75;
+
+  /* A long URL must never widen the page. Only words that would otherwise
+     overflow are broken; ordinary prose is untouched. */
+  overflow-wrap: break-word;
 }
 
 .prose :is(h2, h3, h4) {
@@ -429,6 +445,13 @@
   font-size: 0.85em;
   font-weight: 400;
   color: var(--ui-ink);
+
+  /* An API name such as IOPSNotificationCreateRunLoopSource is one 305px word
+     with no break opportunity, and at 320px it pushed the page 9px wide —
+     WCAG 1.4.10. `anywhere` breaks it without inserting a hyphen, which would
+     read as part of the identifier, and unlike `break-word` it also shrinks
+     the element's min-content width so no ancestor can be forced open. */
+  overflow-wrap: anywhere;
 }
 
 .prose :not(pre) > code::before,
