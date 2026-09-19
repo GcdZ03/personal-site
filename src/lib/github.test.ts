@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { summarizeRepo, type GitHubRepo, type GitHubRelease } from '@/lib/github';
+import { summarizeRepo } from '@/lib/github.mjs';
+import type { GitHubRepo, GitHubRelease } from '@/lib/github.mjs';
 
 const repo: GitHubRepo = {
   name: 'CreativeNotch',

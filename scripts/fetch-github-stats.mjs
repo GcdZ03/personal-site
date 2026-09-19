@@ -1,4 +1,5 @@
 import { writeFile } from 'node:fs/promises';
+import { summarizeRepo } from '../src/lib/github.mjs';
 
 const REPOS = ['GcdZ03/CreativeNotch'];
 const OUTPUT = new URL('../src/data/github-stats.json', import.meta.url);
@@ -24,13 +25,7 @@ try {
     const repo = await getJson(`https://api.github.com/repos/${slug}`);
     if (!repo) continue;
     const release = await getJson(`https://api.github.com/repos/${slug}/releases/latest`);
-    repos.push({
-      name: repo.name,
-      url: repo.html_url,
-      stars: repo.stargazers_count ?? 0,
-      latestRelease: release?.tag_name ?? null,
-      lastPushed: repo.pushed_at,
-    });
+    repos.push(summarizeRepo(repo, release));
   }
   if (repos.length === 0) throw new Error('no repositories resolved');
   await writeFile(OUTPUT, `${JSON.stringify({ generatedAt: new Date().toISOString(), repos }, null, 2)}\n`);
