@@ -16,12 +16,7 @@ const all = toProjectListings(entries);
 const featured = featuredProjects(all);
 const showAllLink = shouldShowAllProjectsLink(all.length, featured.length);
 
-// TASK BLOCKER: ask the author for their LinkedIn URL before this page ships.
-// The spec names email, GitHub and LinkedIn as the full contact surface. Do not
-// guess the handle — a wrong profile link is worse than no link. If the author
-// does not want a LinkedIn presence, delete the anchor below instead.
-const LINKEDIN_URL = 'https://www.linkedin.com/in/REPLACE-ME';
-const showLinkedIn = !LINKEDIN_URL.includes('REPLACE-ME');
+const LINKEDIN_URL = 'https://www.linkedin.com/in/de-zheng-chang';
 ---
 <BaseLayout title="Gerald Chang" description="Developer. Builds macOS tools.">
   <section>
@@ -53,7 +48,7 @@ const showLinkedIn = !LINKEDIN_URL.includes('REPLACE-ME');
     <h2 class="eyebrow">Elsewhere</h2>
     <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-ui">
       <a class="link" href="https://github.com/GcdZ03">GitHub</a>
-      {showLinkedIn && <a class="link" href={LINKEDIN_URL}>LinkedIn</a>}
+      <a class="link" href={LINKEDIN_URL}>LinkedIn</a>
       <a class="link" href="mailto:dezhengchang@gmail.com">Email</a>
     </p>
   </section>
