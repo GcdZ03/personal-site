@@ -22,8 +22,8 @@ page should come away understanding how he makes engineering decisions.
 
 ## Architecture
 
-Astro 5 with TypeScript and Tailwind, compiled to static HTML and deployed to
-Cloudflare Pages.
+Astro 7 with TypeScript and Tailwind 4, compiled to static HTML and deployed to
+Cloudflare Pages. Astro 7 requires Node 22.12 or later.
 
 There is no backend. The deployed artifact is HTML, CSS, images, and a small
 amount of client JavaScript. Nothing executes on a server in response to a
@@ -58,7 +58,8 @@ primitive — which is precisely the shape of this content.
 
 ## Content model
 
-Projects and posts live in Astro content collections with Zod-validated
+Projects and posts live in Astro content collections, declared in
+`src/content.config.ts` using the Content Layer API with Zod-validated
 frontmatter, so a malformed entry fails the build rather than rendering an empty
 section.
 
