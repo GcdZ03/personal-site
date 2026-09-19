@@ -2,18 +2,10 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ProjectRow from '@/components/ProjectRow.astro';
-import { sortProjects, hasDetailPage } from '@/lib/projects';
+import { sortProjects, toProjectListings, projectHref } from '@/lib/projects';
 
 const entries = await getCollection('projects');
-const projects = sortProjects(
-  entries.map((entry) => ({
-    id: entry.id,
-    title: entry.data.title,
-    tier: entry.data.tier,
-    order: entry.data.order,
-    data: entry.data,
-  })),
-);
+const projects = sortProjects(toProjectListings(entries));
 
 const listed = projects.filter((project) => project.tier !== 'archive');
 const archived = projects.filter((project) => project.tier === 'archive');
@@ -26,7 +18,7 @@ const archived = projects.filter((project) => project.tier === 'archive');
     <div class="rows">
       {listed.map((project) => (
         <ProjectRow
-          href={hasDetailPage(project.tier) ? `/projects/${project.id}` : project.data.links.repo}
+          href={projectHref(project)}
           title={project.data.title}
           tagline={project.data.tagline}
           stack={project.data.stack}
@@ -42,8 +34,8 @@ const archived = projects.filter((project) => project.tier === 'archive');
       <ul class="mt-6 space-y-2 text-ui">
         {archived.map((project) => (
           <li>
-            {project.data.links.repo
-              ? <a class="link-quiet" href={project.data.links.repo}>{project.data.title}</a>
+            {projectHref(project)
+              ? <a class="link-quiet" href={projectHref(project)}>{project.data.title}</a>
               : <span class="text-muted">{project.data.title}</span>}
             <span class="text-faint"> — {project.data.tagline}</span>
           </li>

@@ -4,6 +4,10 @@ import {
   featuredProjects,
   hasDetailPage,
   shouldShowAllProjectsLink,
+  toProjectListings,
+  projectHref,
+  type ProjectLinks,
+  type ProjectListing,
   type ProjectSummary,
 } from '@/lib/projects';
 
@@ -76,5 +80,77 @@ describe('shouldShowAllProjectsLink', () => {
 
   it('is shown when projects exist beyond those displayed', () => {
     expect(shouldShowAllProjectsLink(4, 3)).toBe(true);
+  });
+});
+
+const listing = (
+  id: string,
+  tier: ProjectSummary['tier'],
+  links: ProjectLinks,
+): ProjectListing => ({
+  id,
+  title: id,
+  tier,
+  order: 1,
+  data: { title: id, tier, order: 1, links },
+});
+
+const REPO = 'https://github.com/GcdZ03/Thing';
+const DOWNLOAD = 'https://example.com/Thing.dmg';
+const DEMO = 'https://thing.example.com';
+
+describe('toProjectListings', () => {
+  it('hoists the sortable fields and keeps the frontmatter', () => {
+    const entry = {
+      id: 'thing',
+      data: { title: 'Thing', tier: 'standard' as const, order: 2, links: { repo: REPO } },
+    };
+    expect(toProjectListings([entry])).toEqual([
+      { id: 'thing', title: 'Thing', tier: 'standard', order: 2, data: entry.data },
+    ]);
+  });
+});
+
+describe('projectHref', () => {
+  it('sends a flagship to its case study', () => {
+    expect(projectHref(listing('creative-notch', 'flagship', {}))).toBe(
+      '/projects/creative-notch',
+    );
+  });
+
+  it('prefers the case study over the outbound links a flagship also carries', () => {
+    expect(projectHref(listing('creative-notch', 'flagship', { repo: REPO }))).toBe(
+      '/projects/creative-notch',
+    );
+  });
+
+  it('links a standard project to its repo', () => {
+    expect(projectHref(listing('thing', 'standard', { repo: REPO }))).toBe(REPO);
+  });
+
+  it('links a standard project with only a download to that download', () => {
+    expect(projectHref(listing('thing', 'standard', { download: DOWNLOAD }))).toBe(
+      DOWNLOAD,
+    );
+  });
+
+  it('links a standard project with only a demo to that demo', () => {
+    expect(projectHref(listing('thing', 'standard', { demo: DEMO }))).toBe(DEMO);
+  });
+
+  it('prefers repo over download when a standard project has both', () => {
+    expect(
+      projectHref(listing('thing', 'standard', { repo: REPO, download: DOWNLOAD })),
+    ).toBe(REPO);
+  });
+
+  it('prefers download over demo when there is no repo', () => {
+    expect(
+      projectHref(listing('thing', 'standard', { download: DOWNLOAD, demo: DEMO })),
+    ).toBe(DOWNLOAD);
+  });
+
+  it('has nowhere to send a linkless archive project', () => {
+    expect(projectHref(listing('old', 'archive', {}))).toBeUndefined();
   });
 });

@@ -47,3 +47,60 @@ export function hasDetailPage(tier: Tier): boolean {
 export function shouldShowAllProjectsLink(total: number, shown: number): boolean {
   return total > shown;
 }
+
+/** The outbound URLs a project may carry, mirroring the content schema. */
+export interface ProjectLinks {
+  repo?: string;
+  download?: string;
+  demo?: string;
+}
+
+/** The subset of a project's frontmatter this module reasons about. */
+export interface ProjectData {
+  title: string;
+  tier: Tier;
+  order: number;
+  links: ProjectLinks;
+}
+
+/** A content-collection entry, typed structurally so this file stays testable. */
+export interface ProjectEntry<D extends ProjectData = ProjectData> {
+  id: string;
+  data: D;
+}
+
+/** What the pages iterate over: sortable fields hoisted, frontmatter kept. */
+export interface ProjectListing<D extends ProjectData = ProjectData>
+  extends ProjectSummary {
+  data: D;
+}
+
+/**
+ * Hoists the fields sortProjects and featuredProjects need out of frontmatter.
+ * Both listing pages need the identical shape, so they share one mapping.
+ */
+export function toProjectListings<D extends ProjectData>(
+  entries: ProjectEntry<D>[],
+): ProjectListing<D>[] {
+  return entries.map((entry) => ({
+    id: entry.id,
+    title: entry.data.title,
+    tier: entry.data.tier,
+    order: entry.data.order,
+    data: entry.data,
+  }));
+}
+
+/**
+ * Where a project row points, decided in one place so every page agrees.
+ *
+ * A flagship goes to its own case study. Everything else links out, preferring
+ * the source, then a download, then a hosted demo — the schema guarantees a
+ * standard-tier project has at least one of the three, so only an archive
+ * project can land on undefined and render as plain text.
+ */
+export function projectHref(project: ProjectListing): string | undefined {
+  if (hasDetailPage(project.tier)) return `/projects/${project.id}`;
+  const { repo, download, demo } = project.data.links;
+  return repo ?? download ?? demo;
+}
