@@ -65,7 +65,7 @@ section.
 
     src/content/projects/*.md
     src/content/posts/*.md
-    src/data/experience.ts
+    src/data/experience.ts   # roles and skills
 
 ### Project frontmatter
 
@@ -141,6 +141,21 @@ Both this step and the cron are optional for the first release. Without them the
 statistics simply refresh whenever the site is deployed, which during active
 development is often enough. They should be added only once deploy frequency
 drops below the desired refresh rate.
+
+## Resume
+
+The site does not host, link, or generate a resume document. The author tailors a
+PDF for each application, so any generic copy published here would be a weaker
+version of what an employer actually receives, and keeping it in the repository
+would mean versioning a file that changes per application.
+
+Experience and skills still appear on the site, on `/about`, because a recruiter
+reading the site should not have to ask for them. That page is a profile, not a
+resume, and is named accordingly.
+
+Skills are presented as grouped lists. Proficiency bars and percentages are
+excluded deliberately: they quantify something unmeasurable and read as
+inexperienced.
 
 ## Contact
 

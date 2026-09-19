@@ -35,14 +35,14 @@
 | `src/lib/github.test.ts` | Tests for the above. |
 | `scripts/fetch-github-stats.mjs` | Performs the network call in CI, writes `src/data/github-stats.json`. Fails soft. |
 | `src/data/github-stats.json` | Committed build input. Guarantees the site builds offline. |
-| `src/data/experience.ts` | Career timeline, structured. |
+| `src/data/experience.ts` | Career timeline and skill groups, structured. |
 | `src/layouts/BaseLayout.astro` | HTML shell: head, meta, nav, footer, theme. |
 | `src/components/ProjectRow.astro` | One project as a row. The arity-independent layout primitive. |
 | `src/pages/index.astro` | Homepage. |
 | `src/pages/projects/index.astro` | Project index. |
 | `src/pages/projects/[...slug].astro` | Case study. Generated for `flagship` only. |
 | `src/pages/blog/index.astro`, `src/pages/blog/[...slug].astro` | Blog. |
-| `src/pages/resume.astro` | Experience timeline, print-friendly. |
+| `src/pages/about.astro` | Bio, experience timeline, skills. |
 | `src/styles/global.css` | Tailwind import plus design tokens. |
 | `src/content/projects/*.md` | Project entries. |
 | `.github/workflows/ci.yml` | `astro check`, Vitest, build, link check. |
@@ -490,7 +490,7 @@ const nav = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Writing' },
-  { href: '/resume', label: 'Resume' },
+  { href: '/about', label: 'About' },
 ];
 ---
 <html lang="en">
@@ -805,16 +805,21 @@ git commit -m "feat: add homepage with content-driven project selection"
 
 ---
 
-### Task 8: Blog and resume
+### Task 8: Blog and about page
 
 **Files:**
 - Create: `src/pages/blog/index.astro`, `src/pages/blog/[...slug].astro`
-- Create: `src/data/experience.ts`, `src/pages/resume.astro`
+- Create: `src/data/experience.ts`, `src/pages/about.astro`
 - Create: `src/content/posts/hello.md`
 
 **Interfaces:**
 - Consumes: the `posts` collection; `BaseLayout`.
-- Produces: routes `/blog`, `/blog/<slug>`, `/resume`; `experience: Role[]` from `@/data/experience`.
+- Produces: routes `/blog`, `/blog/<slug>`, `/about`; `experience: Role[]` and `skills: SkillGroup[]` from `@/data/experience`.
+
+**Note on scope:** the site deliberately hosts no resume document. The author
+tailors a PDF per application, so a generic copy here would be a weaker version
+than the one an employer receives. This page is a profile, not a resume, and must
+not link to or generate a downloadable CV.
 
 - [ ] **Step 1: Write a first post so the index has content**
 
@@ -894,7 +899,14 @@ const formatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 
 - [ ] **Step 4: Write `src/data/experience.ts`**
 
-The executor must replace the placeholder entry with the author's real history before Task 10 deploys the site publicly. Ask the author for it rather than inventing one.
+**TASK BLOCKER:** the placeholder below must be replaced with the author's real
+history and real skills before Task 10 deploys publicly. Ask the author for both.
+Do not invent roles, dates, or proficiencies — a fabricated CV is worse than an
+empty page.
+
+Skills are grouped lists with no proficiency levels. The spec excludes percentage
+bars and star ratings deliberately: they quantify something unmeasurable and read
+as inexperienced to the engineers reviewing them.
 
 ```ts
 export interface Role {
@@ -903,6 +915,11 @@ export interface Role {
   period: string;
   summary: string;
   highlights: string[];
+}
+
+export interface SkillGroup {
+  label: string;
+  items: string[];
 }
 
 export const experience: Role[] = [
@@ -916,57 +933,67 @@ export const experience: Role[] = [
     ],
   },
 ];
+
+export const skills: SkillGroup[] = [
+  { label: 'Languages', items: ['Swift', 'TypeScript'] },
+  { label: 'Platforms', items: ['macOS', 'Web'] },
+  { label: 'Tools', items: ['Git', 'Xcode'] },
+];
 ```
 
-- [ ] **Step 5: Write `src/pages/resume.astro`**
+- [ ] **Step 5: Write `src/pages/about.astro`**
 
 ```astro
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { experience } from '@/data/experience';
+import { experience, skills } from '@/data/experience';
 ---
-<BaseLayout title="Resume — Gerald Chang" description="Experience and background.">
-  <h1 class="text-2xl font-semibold">Resume</h1>
-  <div class="mt-8">
+<BaseLayout title="About — Gerald Chang" description="Experience, skills and background.">
+  <h1 class="text-2xl font-semibold">About</h1>
+  <p class="mt-3 max-w-prose text-neutral-600">
+    Developer. I build macOS tools that respect the machine they run on.
+  </p>
+
+  <section class="mt-12">
+    <h2 class="text-sm font-medium text-neutral-500">Experience</h2>
     {experience.map((role) => (
-      <section class="border-t border-neutral-200 py-6">
+      <article class="border-t border-neutral-200 py-6">
         <div class="flex items-baseline justify-between gap-4">
-          <h2 class="font-medium">{role.title}, {role.organisation}</h2>
+          <h3 class="font-medium">{role.title}, {role.organisation}</h3>
           <span class="shrink-0 text-sm text-neutral-500">{role.period}</span>
         </div>
         <p class="mt-1 text-neutral-600">{role.summary}</p>
         <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-neutral-600">
           {role.highlights.map((item) => <li>{item}</li>)}
         </ul>
-      </section>
+      </article>
     ))}
-  </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-sm font-medium text-neutral-500">Skills</h2>
+    <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+      {skills.map((group) => (
+        <>
+          <dt class="text-neutral-500">{group.label}</dt>
+          <dd>{group.items.join(', ')}</dd>
+        </>
+      ))}
+    </dl>
+  </section>
 </BaseLayout>
 ```
 
-- [ ] **Step 6: Make the resume print-friendly**
-
-The spec requires this page to print cleanly, so a reader can produce a PDF
-without a separate document. Append to `src/styles/global.css`:
-
-```css
-@media print {
-  header, footer { display: none; }
-  a { text-decoration: none; color: inherit; }
-  body { background: white; color: black; }
-}
-```
-
-- [ ] **Step 7: Verify**
+- [ ] **Step 6: Verify**
 
 Run: `npm run build && npm run check`
-Expected: exit 0; `dist/blog/index.html`, `dist/blog/hello/index.html`, and `dist/resume/index.html` all exist. Open `/resume` in a browser and use print preview: the nav and footer must be absent and the content must fit without clipping.
+Expected: exit 0; `dist/blog/index.html`, `dist/blog/hello/index.html`, and `dist/about/index.html` all exist. Confirm `grep -ril "resume\|\.pdf" dist/` returns nothing — the site must not advertise a CV.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add src/pages/blog src/pages/resume.astro src/data/experience.ts src/content/posts/hello.md src/styles/global.css
-git commit -m "feat: add blog and resume pages"
+git add src/pages/blog src/pages/about.astro src/data/experience.ts src/content/posts/hello.md
+git commit -m "feat: add blog and about pages"
 ```
 
 ---
@@ -1272,7 +1299,7 @@ Design: `docs/superpowers/specs/2026-09-19-personal-site-design.md`
 
 - [ ] **Step 6: Verify the deployment**
 
-Confirm the `*.pages.dev` URL serves the homepage, that `/projects`, `/projects/creative-notch`, `/blog`, and `/resume` all load, and that the GitHub Actions run is green.
+Confirm the `*.pages.dev` URL serves the homepage, that `/projects`, `/projects/creative-notch`, `/blog`, and `/about` all load, and that the GitHub Actions run is green.
 
 - [ ] **Step 7: Commit**
 
@@ -1368,6 +1395,8 @@ Run before declaring the project complete:
 - [ ] Lighthouse performance and accessibility both score 95 or above on the
       deployed homepage, with no remediation work. The static architecture should
       make this automatic; a lower score means something regressed in Task 12.
-- [ ] `/resume` prints cleanly with no navigation chrome.
+- [ ] The site links to no resume or CV document anywhere.
+- [ ] `src/data/experience.ts` contains the author's real history and skills, not
+      the placeholder.
 - [ ] The LinkedIn placeholder in `src/pages/index.astro` has been replaced with a
       real URL or the anchor has been deleted.
