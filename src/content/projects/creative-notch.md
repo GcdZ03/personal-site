@@ -20,25 +20,24 @@ audio tap for a visualiser. Each is cheap per tick, and none ever stops.
 
 ## The constraint
 
-I wrote one rule down before the first module: no subsystem runs when it isn't
+One rule, written down before the first module: no subsystem runs when it isn't
 needed, and that rule is enforced centrally rather than trusted to each module.
-`ARCHITECTURE.md` names three constructs as not allowed — an unconditional
-`Timer`, a permanently installed global event monitor, and cursor-position
-polling. The assumption is that if you think you need one, there is a
+`ARCHITECTURE.md` names four constructs as not allowed — an unconditional
+`Timer`, a permanently installed global event monitor, cursor-position polling,
+and an audio tap. The assumption: if you think you need one, there is a
 notification you have not found yet.
 
 ## What that forced
 
-It decided most of the app. Hover is an `NSTrackingArea` on the panel rather
-than a global mouse monitor, so nothing runs while the cursor is elsewhere.
-Volume comes from CoreAudio property listeners on the default output device —
-the value, not the keypress, so it also catches Control Center and Siri.
-Brightness comes from the DisplayServices change notification, reached through
-`dlsym`, since no public API reads brightness. Battery and Low Power Mode come
-from `IOPSNotificationCreateRunLoopSource`. The global shortcut
-uses Carbon's `RegisterEventHotKey`, which hands the combination to the window
-server, so nothing runs between presses and it needs no Accessibility
-permission.
+It decided most of the app. Hover is an `NSTrackingArea` on the panel, not a
+global mouse monitor, so nothing runs while the cursor is elsewhere. Volume
+comes from CoreAudio property listeners on the default output device — the
+value, not the keypress, so it catches Control Center and Siri. Brightness has
+no public API at all, so it goes through the DisplayServices change notification
+via `dlsym`. Battery and Low Power Mode come from
+`IOPSNotificationCreateRunLoopSource`. The global shortcut uses Carbon's
+`RegisterEventHotKey`, which hands the combination to the window server: nothing
+runs between presses, and it needs no Accessibility permission.
 
 The result is checkable rather than asserted. The source tree holds exactly one
 repeating `Timer` — the clipboard poller, because `NSPasteboard` genuinely has
@@ -51,8 +50,8 @@ is already showing. It is admitted in the spec rather than overlooked.
 
 ## What it cost
 
-Features. No audio visualiser, and there will not be one; it contradicts the
-architecture, so it is on the roadmap as excluded rather than pending. The
+Features. No audio visualiser, and there never will be — the rule names the
+audio tap outright, so it sits on the roadmap as excluded, not pending. The
 now-playing badge is a static album cover, because an equaliser redraws for as
 long as music plays.
 
