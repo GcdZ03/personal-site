@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://personal-site.dezhengchang.workers.dev/sitemap-index.xml
+Sitemap: https://geraldchang.dev/sitemap-index.xml

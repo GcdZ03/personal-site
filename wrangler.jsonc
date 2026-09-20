@@ -15,6 +15,7 @@
   // issues and renews the certificate and no DNS record has to be managed by
   // hand. `.dev` is HSTS-preloaded at the TLD, so this is HTTPS-only by force.
   "routes": [
-    { "pattern": "geraldchang.dev", "custom_domain": true }
+    { "pattern": "geraldchang.dev", "custom_domain": true },
+    { "pattern": "www.geraldchang.dev", "custom_domain": true }
   ]
 }
