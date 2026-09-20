@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8f7dff" stop-opacity="0.72"/>
+      <stop offset="35%" stop-color="#6f5cf0" stop-opacity="0.34"/>
+      <stop offset="70%" stop-color="#4b37c8" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#4b37c8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0c0c0f"/>
+  <ellipse cx="600" cy="52" rx="470" ry="340" fill="url(#glow)"/>
+  <path d="M492 0 h216 v22 a26 26 0 0 1 -26 26 h-164 a26 26 0 0 1 -26 -26 z" fill="#0c0c0f"/>
+  <rect x="494" y="46" width="212" height="3" rx="1.5" fill="#cfc7ff" opacity="0.95"/>
+
+  <text x="100" y="330" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#ededf2">Gerald Chang</text>
+  <text x="100" y="396" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#a8a8b4">Developer. I build macOS tools that respect</text>
+  <text x="100" y="442" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#a8a8b4">the machine they run on.</text>
+
+  <rect x="100" y="506" width="54" height="2" fill="#a79bff"/>
+  <text x="100" y="556" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#6c6c78">Swift · SwiftUI · TypeScript · macOS</text>
+</svg>

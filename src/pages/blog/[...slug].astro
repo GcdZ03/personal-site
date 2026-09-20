@@ -12,7 +12,11 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const formatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 ---
-<BaseLayout title={`${post.data.title} — Gerald Chang`} description={post.data.description}>
+<BaseLayout
+  title={`${post.data.title} — Gerald Chang`}
+  description={post.data.description}
+  ogType="article"
+>
   <article>
     <h1 class="text-h1">{post.data.title}</h1>
     <time

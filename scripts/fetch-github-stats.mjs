@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import { summarizeRepo } from '../src/lib/github.mjs';
 
-const REPOS = ['GcdZ03/CreativeNotch'];
+const REPOS = ['GcdZ03/CreativeNotch', 'GcdZ03/personal-site'];
 const OUTPUT = new URL('../src/data/github-stats.json', import.meta.url);
 
 const headers = {
