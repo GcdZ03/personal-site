@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Gerald Chang">
   <defs>
     <radialGradient id="g" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#cfc6ff" stop-opacity="1"/>
-      <stop offset="38%"  stop-color="#8f7dff" stop-opacity="0.95"/>
-      <stop offset="72%"  stop-color="#5a45d8" stop-opacity="0.55"/>
+      <stop offset="0%"   stop-color="#b4a7ff" stop-opacity="0.85"/>
+      <stop offset="45%"  stop-color="#6f5cf0" stop-opacity="0.42"/>
       <stop offset="100%" stop-color="#4b37c8" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="64" height="64" rx="14" fill="#0c0c0f"/>
-  <ellipse cx="32" cy="24" rx="34" ry="30" fill="url(#g)"/>
-  <path d="M16 0 h32 v9 a7 7 0 0 1 -7 7 h-18 a7 7 0 0 1 -7 -7 z" fill="#0c0c0f"/>
-  <rect x="16" y="14.6" width="32" height="2.6" rx="1.3" fill="#e6e1ff"/>
+  <ellipse cx="32" cy="42" rx="30" ry="26" fill="url(#g)"/>
+  <text x="32" y="46" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="48"
+        fill="#f2f0ff">G</text>
 </svg>
