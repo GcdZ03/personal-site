@@ -79,7 +79,7 @@ and it dies with the app.
 
 ## The result
 
-v0.5.0, every planned module shipped. Each can be switched off, and switching it
+v0.6.0, every planned module shipped. Each can be switched off, and switching it
 off stops what it runs rather than hiding it — the clipboard's poller, the media
 helper's subprocess, the HUD's event tap, the shortcut's registration. That
 lives in one `ModuleSwitchboard`, because the three lists it replaced in the app

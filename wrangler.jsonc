@@ -9,5 +9,12 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
-  }
+  },
+
+  // The apex is attached as a Custom Domain rather than a route, so Cloudflare
+  // issues and renews the certificate and no DNS record has to be managed by
+  // hand. `.dev` is HSTS-preloaded at the TLD, so this is HTTPS-only by force.
+  "routes": [
+    { "pattern": "geraldchang.dev", "custom_domain": true }
+  ]
 }
