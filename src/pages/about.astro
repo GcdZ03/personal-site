@@ -2,11 +2,22 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { experience, skills } from '@/data/experience';
 ---
-<BaseLayout title="About — Gerald Chang" description="Experience, skills and background.">
+<BaseLayout title="About — Gerald Chang" description="Software engineer at Enroute Tech, building developer tools and a macOS app on the side.">
   <h1 class="text-h1">About</h1>
-  <p class="mt-6 max-w-[34rem] text-lead text-muted">
-    Developer. I build macOS tools that respect the machine they run on.
-  </p>
+  <div class="mt-6 max-w-[34rem] space-y-4 text-lead text-muted">
+    <p>
+      I'm a software engineer at Enroute Tech, working on a fleet and logistics
+      platform: a PHP backend and two Flutter apps, where every change goes
+      through human review.
+    </p>
+    <p>
+      Outside work I build tools I use myself. What connects them is that each
+      one has to back up its claims. CreativeNotch holds its no-polling rule to
+      a grep of its own source. pr-decision-log was redesigned after I measured
+      my own agent sessions and found the reasoning it set out to capture wasn't
+      there.
+    </p>
+  </div>
 
   <section class="mt-block">
     <h2 class="eyebrow">Experience</h2>
