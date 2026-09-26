@@ -79,8 +79,9 @@ while the machine is awake and unlocked.
 
 ## The result
 
-v0.7.0: a file shelf, media controls, clipboard history, battery, a timer, a
-camera mirror and the capture indicator. Each one can be switched off, and
+v0.7.0 has nine modules: a file shelf, clipboard history, now-playing metadata,
+media controls, battery, a timer, a global shortcut, a camera mirror and the
+capture indicator. Eight need nothing granted. Each one can be switched off, and
 switching it off stops what it runs rather than hiding it. That lives in one
 `ModuleSwitchboard`. The core target imports only Foundation, CoreGraphics and
 Observation, which is what lets the geometry, state machine and peek arbitration
