@@ -29,61 +29,59 @@ notification you have not found yet.
 
 ## What that forced
 
-It decided most of the app. Hover is an `NSTrackingArea` on the panel, not a
-global mouse monitor, so nothing runs while the cursor is elsewhere. Volume
-comes from CoreAudio property listeners on the default output device — the
-value, not the keypress, so it catches Control Center and Siri. Brightness has
-no public API at all, so it goes through the DisplayServices change notification
-via `dlsym`. Battery and Low Power Mode come from
-`IOPSNotificationCreateRunLoopSource`. The global shortcut uses Carbon's
-`RegisterEventHotKey`, which hands the combination to the window server: nothing
-runs between presses, and it needs no Accessibility permission.
+It decided most of the app. Hover is an `NSTrackingArea` on the panel, so
+nothing runs while the cursor is elsewhere. Battery and Low Power Mode come from
+`IOPSNotificationCreateRunLoopSource`. The global shortcut goes through Carbon's
+`RegisterEventHotKey`, which hands the combination to the window server, so
+nothing runs between presses. The capture indicator, which lights when another
+app is using your camera or microphone, listens for the
+`DeviceIsRunningSomewhere` property on CoreAudio and CoreMediaIO devices instead
+of asking every few seconds.
 
-The result is checkable rather than asserted. The source tree holds exactly one
-repeating `Timer` — the clipboard poller, because `NSPasteboard` genuinely has
-no change notification. It runs at 0.75s, backs off to 3s after two quiet
-minutes, floors at 2s in Low Power Mode, and suspends while the screen is locked
-or the machine is asleep. There is one `addGlobalMonitorForEvents`, installed
-only while the panel is open. And one permanently installed listener: a
-`CGEventTap` for the media keys, so the notch stays silent when Apple's own HUD
-is already showing. It is admitted in the spec rather than overlooked.
+Launch at login follows the same idea from another direction. The switch reads
+`SMAppService` every time rather than remembering an answer, so turning the
+login item off in System Settings shows up as off: there is no stored flag left
+to disagree with the system.
+
+The rule is checkable rather than asserted. The source tree holds exactly one
+repeating `Timer`, the clipboard poller, because `NSPasteboard` genuinely has no
+change notification. It backs off after two quiet minutes and suspends while the
+screen is locked or the machine is asleep. There is exactly one
+`addGlobalMonitorForEvents`, installed only while the panel is open.
 
 ## What it cost
 
-Features. No audio visualiser, and there never will be — the rule names the
-audio tap outright, so it sits on the roadmap as excluded, not pending. The
-now-playing badge is a static album cover, because an equaliser redraws for as
-long as music plays.
-
-Accuracy. Auto-brightness produces real brightness changes — 2301 in one session
-on a machine doing nothing — so the HUD ignores steps smaller than 0.005. That
-filter cannot tell the ambient light sensor from a very slow hand: drag the
-Control Center slider over more than about three seconds and the HUD never
-appears.
+A working feature. Volume and brightness in the notch shipped in v0.2.0, ran for
+a month, and came out in v0.7.0. Nothing was broken — its last bug had been
+fixed the day before. But it needed a permanently installed `CGEventTap` for the
+media keys, which was the one exception to the rule, and that tap was the only
+reason the app asked for Accessibility. Removing it took 3,397 lines out and put
+428 back. Now the rule has no asterisk, and first launch asks for nothing. The
+only prompt left is the camera's, and that one appears only the first time you
+open the camera.
 
 Lifecycle correctness, which I underestimated. Refusing to poll makes every
-subsystem a registration, and every registration has to be undone. `stop()`
-became the hard part of each module, and three of them — `VolumeObserver`,
-`BrightnessObserver`, `MediaKeyMonitor` — shipped a `stop()` that forgot
-something `start()` had registered. The boolean flipped, the module looked
-stopped, the listener leaked. Reading the code caught none of them; exposing a
-registration count and asserting it did, and that is now how every observer here
-is built.
+subsystem a registration, and every registration has to be undone. Three
+modules shipped a `stop()` that forgot something `start()` had registered: the
+boolean flipped, the module looked stopped, and the listener leaked. Reading the
+code caught none of them. Exposing a registration count and asserting on it did,
+and every observer is now built that way.
 
-Avoiding a poll can also cost more than polling. Since macOS 15.4, Now Playing
-metadata is gated by code-signing identifier, which an ad-hoc-signed app cannot
-satisfy — so the app runs a helper through the system's own `perl`, signed as
-`com.apple.perl`, and reads newline-delimited JSON back. A supervised subprocess
-is heavier than a timer. It starts only while the machine is awake and unlocked,
-and it dies with the app.
+Features, deliberately. There is no audio visualiser and there won't be, because
+the rule names the audio tap outright. The now-playing badge is a static album
+cover, because an equaliser would redraw for as long as music plays.
+
+Avoiding a poll can cost more than polling. Since macOS 15.4, Now Playing
+metadata is gated by code-signing identifier, which an ad-hoc-signed app can't
+satisfy, so the app runs a helper through the system's own `/usr/bin/perl` and
+reads JSON back. A supervised subprocess is heavier than a timer. It starts only
+while the machine is awake and unlocked.
 
 ## The result
 
-v0.6.0, every planned module shipped. Each can be switched off, and switching it
-off stops what it runs rather than hiding it — the clipboard's poller, the media
-helper's subprocess, the HUD's event tap, the shortcut's registration. That
-lives in one `ModuleSwitchboard`, because the three lists it replaced in the app
-delegate did not agree with each other. The same rule produced the target split:
-`CreativeNotchCore` never imports AppKit or SwiftUI, which is what lets the
-geometry, state machine and peek arbitration run headlessly in CI in about a
-second.
+v0.7.0: a file shelf, media controls, clipboard history, battery, a timer, a
+camera mirror and the capture indicator. Each one can be switched off, and
+switching it off stops what it runs rather than hiding it. That lives in one
+`ModuleSwitchboard`. The core target imports only Foundation, CoreGraphics and
+Observation, which is what lets the geometry, state machine and peek arbitration
+run headlessly in CI — 974 tests in about two seconds.
