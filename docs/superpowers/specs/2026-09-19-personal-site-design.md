@@ -152,6 +152,22 @@ token and could not commit the output back. Automating the refresh is exactly
 what the cron above would buy. Until then, refreshing by hand before a release
 is enough at this update rate.
 
+## Checked figures
+
+The same `npm run stats` run also writes `src/data/verified-claims.json`: each
+case study's figures read from where they live rather than typed in. Test
+counts come from the latest green CI run's job logs, source counts (repeating
+`Timer`s, global event monitors, event taps) from a grep of CreativeNotch's
+`Sources/` at that run's commit, and versions from GitHub releases and the npm
+registry. Job logs need a token even on a public repo; the script takes
+`GITHUB_TOKEN` or the GitHub CLI's, and without one keeps each unreadable
+figure at its last value and last check date rather than blanking it.
+
+Case studies show the figures under "Checked against the source", each linked
+to where it was read; project rows show a short proof line. Prose that quotes a
+figure is held to the data by `src/lib/claims-prose.test.ts`, so a refresh
+that changes a number fails CI until the sentence is updated.
+
 ## Resume
 
 The site does not host, link, or generate a resume document. The author tailors a

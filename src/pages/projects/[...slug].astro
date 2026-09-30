@@ -2,7 +2,9 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import VerifiedFacts from '@/components/VerifiedFacts.astro';
 import { hasDetailPage } from '@/lib/projects';
+import { claimsFor } from '@/lib/verified';
 
 export const getStaticPaths = (async () => {
   const entries = await getCollection('projects');
@@ -20,6 +22,7 @@ const LINK_LABELS: Record<string, string> = {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const claims = claimsFor(entry.id);
 const links = (Object.entries(entry.data.links) as Array<[string, string]>).map(
   ([key, href]) => ({ label: LINK_LABELS[key] ?? key, href }),
 );
@@ -40,6 +43,8 @@ const links = (Object.entries(entry.data.links) as Array<[string, string]>).map(
         {links.map((link) => <a class="link" href={link.href}>{link.label}</a>)}
       </p>
     )}
+
+    {claims && <VerifiedFacts claims={claims} />}
 
     <div class="prose mt-section max-w-none"><Content /></div>
   </article>

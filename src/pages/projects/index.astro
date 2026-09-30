@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ProjectRow from '@/components/ProjectRow.astro';
 import { sortProjects, toProjectListings, projectHref } from '@/lib/projects';
+import { rowProof } from '@/lib/verified';
 
 const entries = await getCollection('projects');
 const projects = sortProjects(toProjectListings(entries));
@@ -23,6 +24,7 @@ const archived = projects.filter((project) => project.tier === 'archive');
           tagline={project.data.tagline}
           stack={project.data.stack}
           period={project.data.period}
+          proof={rowProof(project.id)}
         />
       ))}
     </div>

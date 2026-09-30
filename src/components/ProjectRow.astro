@@ -5,9 +5,11 @@ interface Props {
   tagline: string;
   stack: string[];
   period: string;
+  /** Checked figures, read by `npm run stats` rather than written. */
+  proof?: string[];
 }
 
-const { href, title, tagline, stack, period } = Astro.props;
+const { href, title, tagline, stack, period, proof = [] } = Astro.props;
 ---
 <article class="row">
   <div class="row-head">
@@ -20,4 +22,9 @@ const { href, title, tagline, stack, period } = Astro.props;
   <ul class="stack">
     {stack.map((item) => <li>{item}</li>)}
   </ul>
+  {proof.length > 0 && (
+    <ul class="proof" aria-label="Checked against the source">
+      {proof.map((item) => <li>{item}</li>)}
+    </ul>
+  )}
 </article>
