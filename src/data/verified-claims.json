@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-09-30T11:46:22.097Z",
+  "projects": {
+    "creative-notch": {
+      "commit": "6a32862",
+      "commitUrl": "https://github.com/GcdZ03/CreativeNotch/tree/6a3286233525a29690de1998709d25a975a29c0c",
+      "facts": [
+        {
+          "id": "tests",
+          "value": 974,
+          "label": "tests passing in CI",
+          "short": "974 tests passing",
+          "source": "CI run 36222222112",
+          "href": "https://github.com/GcdZ03/CreativeNotch/actions/runs/36222222112",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        },
+        {
+          "id": "repeating-timers",
+          "value": 1,
+          "label": "repeating Timer in the app source",
+          "short": "1 repeating timer",
+          "source": "ClipboardPoller.swift:36",
+          "href": "https://github.com/GcdZ03/CreativeNotch/blob/6a3286233525a29690de1998709d25a975a29c0c/Sources/CreativeNotchUI/Clipboard/ClipboardPoller.swift#L36",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        },
+        {
+          "id": "global-monitors",
+          "value": 1,
+          "label": "global event monitor, installed only while the panel is open",
+          "short": "1 global monitor",
+          "source": "AppDelegate.swift:206",
+          "href": "https://github.com/GcdZ03/CreativeNotch/blob/6a3286233525a29690de1998709d25a975a29c0c/Sources/CreativeNotchUI/AppDelegate.swift#L206",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        },
+        {
+          "id": "event-taps",
+          "value": 0,
+          "label": "event taps, so nothing asks for Accessibility",
+          "short": "0 event taps",
+          "source": "code search",
+          "href": "https://github.com/search?q=repo%3AGcdZ03%2FCreativeNotch%20tapCreate&type=code",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        },
+        {
+          "id": "release",
+          "value": "v0.7.0",
+          "label": "latest release",
+          "short": "v0.7.0",
+          "source": "GitHub releases",
+          "href": "https://github.com/GcdZ03/CreativeNotch/releases/tag/v0.7.0",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        }
+      ]
+    },
+    "pr-decision-log": {
+      "commit": "9a2d3d5",
+      "commitUrl": "https://github.com/GcdZ03/pr-decision-log/tree/9a2d3d518c1993ae6186a76ab52a106e85a11b95",
+      "facts": [
+        {
+          "id": "tests",
+          "value": 383,
+          "label": "tests passing in CI, on Node 22 and 24",
+          "short": "383 tests passing",
+          "source": "CI run 36221919156",
+          "href": "https://github.com/GcdZ03/pr-decision-log/actions/runs/36221919156",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        },
+        {
+          "id": "npm",
+          "value": "0.1.2",
+          "label": "published on npm",
+          "short": "v0.1.2 on npm",
+          "source": "npm registry",
+          "href": "https://www.npmjs.com/package/pr-decision-log/v/0.1.2",
+          "checkedAt": "2026-09-30T11:46:22.097Z"
+        }
+      ]
+    }
+  }
+}

@@ -13,7 +13,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "stats": "node scripts/fetch-github-stats.mjs"
+    "stats": "node scripts/fetch-github-stats.mjs && node scripts/fetch-verified-claims.mjs"
   },
   "keywords": [],
   "author": "",

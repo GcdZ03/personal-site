@@ -321,6 +321,95 @@
     color: var(--ui-rule-strong);
   }
 
+  /* -- Proof line --------------------------------------------------------
+     The stack line's sibling: same utility face, but these are measured
+     figures rather than a list of tools, so each carries the accent tick.
+     ---------------------------------------------------------------------- */
+  .proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.5;
+    color: var(--ui-muted);
+  }
+
+  .proof li::before {
+    content: "✓";
+    margin-inline-end: 0.4em;
+    color: var(--ui-accent);
+  }
+
+  /* -- Checked figures -----------------------------------------------------
+     A case study's numbers, set as a readout: the value in the utility face
+     at heading size, what it counts beside it, and where it was read below.
+     ---------------------------------------------------------------------- */
+  .checks {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .check {
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    border-top: 1px solid var(--ui-rule);
+    padding-top: 0.875rem;
+  }
+
+  .check-value {
+    flex-shrink: 0;
+    /* Wide enough for a release tag, so every label starts on one line. */
+    min-width: 6.25ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-h2);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ui-ink);
+  }
+
+  .check dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.125rem 0.75rem;
+    min-width: 0;
+  }
+
+  .check-label {
+    font-size: var(--text-ui);
+    line-height: 1.4;
+    color: var(--ui-read);
+  }
+
+  .check-source {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--ui-faint);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: color 140ms ease;
+  }
+
+  .check-source::after {
+    content: " ↗";
+  }
+
+  .check-source:hover {
+    color: var(--ui-accent);
+  }
+
+  .check-note {
+    margin-top: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.6;
+    color: var(--ui-faint);
+  }
+
   /* -- Links ---------------------------------------------------------------
      Inline links carry the accent in their underline, not in their text, so a
      paragraph stays one colour and the affordance still reads.

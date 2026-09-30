@@ -1,0 +1,31 @@
+---
+import type { ProjectClaims } from '@/lib/claims.mjs';
+import { checkedOn } from '@/lib/verified';
+
+interface Props {
+  claims: ProjectClaims;
+}
+
+const { claims } = Astro.props;
+const checked = checkedOn(claims.facts);
+const formatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeZone: 'UTC' });
+---
+<section class="mt-section" aria-labelledby="checked-heading">
+  <h2 id="checked-heading" class="eyebrow">Checked against the source</h2>
+  <dl class="checks">
+    {claims.facts.map((fact) => (
+      <div class="check">
+        <dt class="check-value">{fact.value}</dt>
+        <dd>
+          <span class="check-label">{fact.label}</span>
+          <a class="check-source" href={fact.href}>{fact.source}</a>
+        </dd>
+      </div>
+    ))}
+  </dl>
+  <p class="check-note">
+    Each figure is read from the page it links to, not typed in.
+    {claims.commitUrl && <>{' '}Source figures are at commit <a class="link-quiet" href={claims.commitUrl}>{claims.commit}</a>.</>}
+    {checked && <>{' '}Checked <time datetime={checked.toISOString()}>{formatter.format(checked)}</time>.</>}
+  </p>
+</section>

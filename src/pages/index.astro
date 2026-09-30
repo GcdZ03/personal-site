@@ -8,6 +8,7 @@ import {
   toProjectListings,
   projectHref,
 } from '@/lib/projects';
+import { rowProof } from '@/lib/verified';
 import stats from '@/data/github-stats.json';
 
 const entries = await getCollection('projects');
@@ -36,6 +37,7 @@ const LINKEDIN_URL = 'https://www.linkedin.com/in/de-zheng-chang';
           tagline={project.data.tagline}
           stack={project.data.stack}
           period={project.data.period}
+          proof={rowProof(project.id)}
         />
       ))}
     </div>
