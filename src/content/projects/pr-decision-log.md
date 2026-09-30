@@ -76,5 +76,5 @@ reads the folder's trust flag directly.
 
 It installs as Claude Code hooks and publishes on its own. It's dogfooded on its
 own pull requests, with both publish modes verified against the real GitHub API.
-316 tests, CI on Node 22 and 24. It isn't on npm yet: that waits on ten
-consecutive pull requests carrying a log I didn't hand-edit.
+383 tests, CI on Node 22 and 24, and it's published on npm, so
+`npm install -g pr-decision-log` is the whole install.
