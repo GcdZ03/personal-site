@@ -6,10 +6,14 @@ Static personal site built with Astro 7 and Tailwind 4. No backend.
 - `npm run check` — types and content schema
 - `npm test` — unit tests
 - `npm run build` — static build into `dist/`
-- `npm run stats` — refresh committed GitHub statistics
+- `npm run stats` — refresh the committed GitHub statistics and the case studies'
+  checked figures (see the design spec, "Checked figures")
 
-Not deployed yet. The intended setup is Cloudflare Workers (static assets) building from
-`main`; nothing is connected until that project exists.
+Live at **https://geraldchang.dev**, served as an assets-only Cloudflare Worker
+(`wrangler.jsonc`). Cloudflare Workers Builds is connected to this repo: every push
+to `main` runs `npm run build` and `npx wrangler deploy`, so **pushing to `main`
+publishes the site**. Pull requests get a preview build. That deploy is not in
+`.github/workflows/ci.yml`, which only checks, tests, builds and link-checks.
 
 Design: `docs/superpowers/specs/2026-09-19-personal-site-design.md`
 
