@@ -16,9 +16,12 @@ page should come away understanding how he makes engineering decisions.
 ## Constraints
 
 - Ongoing cost must be $0, with no free-tier limit the site can realistically hit.
+  (Hosting still is. Since 2026-09-20 the one cost is the `geraldchang.dev`
+  registration, renewed yearly through Cloudflare Registrar.)
 - The author writes new side projects continuously. Adding one must be cheap.
 - The design is custom. The site must not read as a template.
-- No custom domain initially; a free subdomain is acceptable.
+- No custom domain initially; a free subdomain is acceptable. (Superseded: the
+  site moved to `geraldchang.dev` on 2026-09-20. See Deployment.)
 
 ## Architecture
 
@@ -205,7 +208,9 @@ structure is standing, not decided upfront.
 
 Commits to `main` on GitHub trigger a Cloudflare build via Workers Builds, which
 runs `npm run build` and then `npx wrangler deploy`. Pull requests get preview
-versions. The site is served from a `*.workers.dev` subdomain.
+versions. The site is served from `geraldchang.dev`, attached in `wrangler.jsonc` as
+a Custom Domain (apex and `www`) on 2026-09-20; it first ran on a `*.workers.dev`
+subdomain.
 
 Deployment targets Cloudflare Workers with static assets rather than Cloudflare
 Pages. Pages was the original choice, but Cloudflare now directs new projects to
@@ -215,15 +220,20 @@ assets-only Worker with no `main` entry point, so no code runs per request and
 static asset requests are served free and unmetered, exactly as under Pages.
 
 Cloudflare is chosen over Vercel for its unlimited free bandwidth; Vercel's
-hobby tier caps bandwidth and restricts commercial use. Attaching a custom domain
-later is a DNS change and requires no rebuild or migration.
+hobby tier caps bandwidth and restricts commercial use. Attaching the custom
+domain needed no rebuild or migration, but it did take the `*.workers.dev`
+hostname out of service, with no redirect, so links to that old URL are dead.
 
 ## Testing
 
 - `astro check` in CI — catches type errors and content schema violations.
-- A link checker in CI — catches broken internal and external links.
+- `vitest` in CI — unit tests for the logic in `src/lib/`: project ordering, the
+  GitHub stats mapping, the checked-figures parsing, and the test that holds
+  case-study prose to `verified-claims.json`.
+- A link checker in CI — catches broken internal links. External links are
+  skipped, so a dead outbound URL is not caught.
 
-No component test suite. For a site with no runtime logic, it would be ceremony
+No component test suite. For pages with no runtime logic, it would be ceremony
 without corresponding risk.
 
 ## Accounts and cost
